@@ -15,17 +15,21 @@ public class CsvReader {
             return Files.lines(Paths.get(path))
                     .skip(1)
                     .map(line -> line.split(";"))
-                    .map(parts -> new Product(
-                            Integer.parseInt(parts[0]),
-                            parts[1],
-                            Double.parseDouble(parts[2].replace(',', '.')),
-                            Integer.parseInt(parts[3]),
-                            Boolean.parseBoolean(parts[4].replace("+", "true").replace("-", "false"))
-                    )).collect(Collectors.toList());
+                    .map(parts -> createProduct(parts))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static Product createProduct(String[] parts) {
+        int id = Integer.parseInt(parts[0]);
+        String description = parts[1];
+        double price = Double.parseDouble(parts[2].replace(',', '.'));
+        int quantity = Integer.parseInt(parts[3]);
+        boolean wholeSale = Boolean.parseBoolean(parts[4].replace("+", "true").replace("-", "false"));
+        return new Product(id, description, price, quantity, wholeSale);
     }
 
     public static List<DiscountCard> readDiscountCards(String path) {
@@ -33,14 +37,18 @@ public class CsvReader {
             return Files.lines(Paths.get(path))
                     .skip(1)
                     .map(line -> line.split(";"))
-                    .map(parts -> new DiscountCard(
-                            Integer.parseInt(parts[0]),
-                            Integer.parseInt(parts[1]),
-                            Integer.parseInt(parts[2])
-                    )).collect(Collectors.toList());
+                    .map(parts -> createDiscountCard(parts))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static DiscountCard createDiscountCard(String[] parts) {
+        int id = Integer.parseInt(parts[0]);
+        int number = Integer.parseInt(parts[1]);
+        int discount = Integer.parseInt(parts[2]);
+        return new DiscountCard(id, number, discount);
     }
 }

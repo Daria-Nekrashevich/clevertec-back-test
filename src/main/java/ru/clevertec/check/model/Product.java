@@ -1,6 +1,5 @@
 package ru.clevertec.check.model;
 
-
 public class Product {
     private int id;
     private String description;
@@ -62,8 +61,8 @@ public class Product {
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", quantityInStock=" + quantity +
-                ", wholesale=" + wholeSale +
+                ", quantity=" + quantity +
+                ", wholeSale=" + wholeSale +
                 '}';
     }
 }
