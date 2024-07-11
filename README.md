@@ -47,5 +47,19 @@ java -cp out ru.clevertec.check.CheckRunner 7-1 1-5 7-8 discountCard=3333 balanc
 ```
 
 Эта команда сформирует CSV-файл `result.csv`, содержащий чек покупок на основе переданных данных.
+```bash
+Date;Time
+2024-07-11;04:23:53
 
+QTY;DESCRIPTION;PRICE;DISCOUNT;TOTAL
+5;Milk;1,07$;0,54$;5,35$
+9;Packed apples 1kg;2,78$;1,00$;25,02$
+
+DISCOUNT CARD;DISCOUNT PERCENTAGE
+3333;4%
+
+TOTAL PRICE;TOTAL DISCOUNT;TOTAL WITH DISCOUNT
+30,37$;1,54$;28,83$
+
+```
 ---
