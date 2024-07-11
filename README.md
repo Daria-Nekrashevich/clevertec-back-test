@@ -125,7 +125,7 @@ TOTAL PRICE;TOTAL DISCOUNT;TOTAL WITH DISCOUNT
 ```bash
 java -cp out ./src/main/java/ru/clevertec/check/CheckRunner.java 3-1 2-5 5-1 discountCard=1111 balanceDebitCard=100 pathToFile=./products.csv
 ```
-Эта команда сформирует CSV-файл `resuLt.csv`, содержащий информацию об ошибке.
+Эта команда сформирует CSV-файл `result.csv`, содержащий информацию об ошибке.
 ```bash
 ERROR
 BAD REQUEST
