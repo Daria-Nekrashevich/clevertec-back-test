@@ -1,6 +1,7 @@
 package ru.clevertec.check.util;
 
 import ru.clevertec.check.exception.NotEnoughMoneyException;
+import ru.clevertec.check.exception.WrongDataException;
 import ru.clevertec.check.model.Product;
 import ru.clevertec.check.service.CalculatorService;
 import ru.clevertec.check.service.DiscountCardService;
@@ -26,7 +27,7 @@ public class CsvWriter {
         }
     }
 
-    public static void checkWriter(String pathProduct, String pathDiscount, Map<Integer, Integer> productQuantities, int discountNumber, double balanceDebitCard) {
+    public static void checkWriter(String pathToFile, String pathDiscount, Map<Integer, Integer> productQuantities, int discountNumber, double balanceDebitCard, String saveToFile) {
         try {
             StringBuilder check = new StringBuilder();
             LocalDate date = LocalDate.now();
@@ -42,7 +43,7 @@ public class CsvWriter {
             CalculatorService calculatorService = createCalculatorService();
             DiscountCardService discountCardService = createDiscountCardService();
             int discountAmount = discountCardService.getDiscountAmountByCardNumber(discountNumber, pathDiscount);
-            Map<Product, Integer> foundProductQuantities = productService.findProductsByArgs(productQuantities, pathProduct);
+            Map<Product, Integer> foundProductQuantities = productService.findProductsByArgs(productQuantities, pathToFile);
 
             for (Map.Entry<Product, Integer> entry : foundProductQuantities.entrySet()) {
                 int quantity = entry.getValue();
@@ -64,15 +65,18 @@ public class CsvWriter {
                     .append(String.format("%.2f", calculatorService.calculateTotalPrice(foundProductQuantities))).append("$;")
                     .append(String.format("%.2f", calculatorService.calculateTotalDiscount(foundProductQuantities, discountAmount))).append("$;")
                     .append(String.format("%.2f", calculatorService.calculateTotalPriceWithDiscount(foundProductQuantities, discountAmount))).append("$\n");
+
             if (calculatorService.calculateTotalPriceWithDiscount(foundProductQuantities, discountAmount) > balanceDebitCard) {
                 throw new NotEnoughMoneyException();
             }
-            writeToFile(RESULT_FILE_PATH, check.toString());
+
+            writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, check.toString());
             System.out.println(check.toString());
+
         } catch (NotEnoughMoneyException e) {
-            handleException(e, "ERROR\nNOT ENOUGH MONEY");
-        } catch (IOException e) {
-            handleException(e, "ERROR\nINTERNAL SERVER ERROR");
+            handleException(e, "ERROR\nNOT ENOUGH MONEY", saveToFile != null ? saveToFile : RESULT_FILE_PATH);
+        } catch (IOException | WrongDataException e) {
+            handleException(e, "ERROR\nBAD REQUEST", saveToFile != null ? saveToFile : RESULT_FILE_PATH);
         }
     }
 
@@ -88,8 +92,8 @@ public class CsvWriter {
         return new DiscountCardService();
     }
 
-    private static void handleException(Exception e, String message) {
+    private static void handleException(Exception e, String message, String filePath) {
         System.err.println(e.getMessage());
-        writeToFile(RESULT_FILE_PATH, message);
+        writeToFile(filePath, message);
     }
 }

@@ -21,5 +21,5 @@ test {
 task run(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = './src/main/java/ru/clevertec/check/CheckRunner.java'
-    args = ['id-quantity', 'discountCard=xxxx', 'balanceDebitCard=xxxx']
+    args = ['id-quantity', 'discountCard=xxxx', 'balanceDebitCard=xxxx', 'pathToFile=xxxx', 'saveToFile=xxxx']
 }

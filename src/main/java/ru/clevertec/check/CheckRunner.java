@@ -7,15 +7,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CheckRunner {
+    private static final String RESULT_FILE_PATH = "./src/main/result.csv";
+
     public static void main(String[] args) throws IOException {
         Map<Integer, Integer> productQuantities = parseProductQuantities(args);
         int discountCardNumber = parseDiscountCardNumber(args);
         double balanceDebitCard = parseBalanceDebitCard(args);
+        String pathToFile = parsePathToFile(args);
+        String saveToFile = parseSaveToFile(args);
 
-        String pathProducts = "./src/main/resources/products.csv";
         String pathDiscountCards = "./src/main/resources/discountCards.csv";
 
-        CsvWriter.checkWriter(pathProducts, pathDiscountCards, productQuantities, discountCardNumber, balanceDebitCard);
+        if (pathToFile == null) {
+            CsvWriter.writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, "ERROR\nBAD REQUEST");
+        } else {
+            CsvWriter.checkWriter(pathToFile, pathDiscountCards, productQuantities, discountCardNumber, balanceDebitCard, saveToFile);
+        }
     }
 
     private static Map<Integer, Integer> parseProductQuantities(String[] args) {
@@ -51,5 +58,27 @@ public class CheckRunner {
             }
         }
         return balanceDebitCard;
+    }
+
+    private static String parsePathToFile(String[] args) {
+        String pathToFile = null;
+        for (String arg : args) {
+            if (arg.startsWith("pathToFile=")) {
+                pathToFile = arg.split("=")[1];
+                break;
+            }
+        }
+        return pathToFile;
+    }
+
+    private static String parseSaveToFile(String[] args) {
+        String saveToFile = null;
+        for (String arg : args) {
+            if (arg.startsWith("saveToFile=")) {
+                saveToFile = arg.split("=")[1];
+                break;
+            }
+        }
+        return saveToFile;
     }
 }
