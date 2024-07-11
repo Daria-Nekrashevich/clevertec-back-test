@@ -18,10 +18,20 @@ public class CheckRunner {
 
         String pathDiscountCards = "./src/main/resources/discountCards.csv";
 
-        if (pathToFile == null) {
-            CsvWriter.writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, "ERROR\nBAD REQUEST");
-        } else {
+        try {
+            if (pathToFile == null) {
+                CsvWriter.writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, "ERROR\nBAD REQUEST");
+                return;
+            }
+
             CsvWriter.checkWriter(pathToFile, pathDiscountCards, productQuantities, discountCardNumber, balanceDebitCard, saveToFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            CsvWriter.writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, "ERROR\nBAD REQUEST");
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            CsvWriter.writeToFile(saveToFile != null ? saveToFile : RESULT_FILE_PATH, "ERROR\nBAD REQUEST");
         }
     }
 

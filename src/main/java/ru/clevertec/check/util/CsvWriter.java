@@ -19,12 +19,8 @@ import java.util.Map;
 public class CsvWriter {
     private static final String RESULT_FILE_PATH = "./src/main/result.csv";
 
-    public static void writeToFile(String filePath, String content) {
-        try {
-            Files.write(Paths.get(filePath), content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void writeToFile(String filePath, String content) throws IOException {
+        Files.write(Paths.get(filePath), content.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     public static void checkWriter(String pathToFile, String pathDiscount, Map<Integer, Integer> productQuantities, int discountNumber, double balanceDebitCard, String saveToFile) {
@@ -94,6 +90,10 @@ public class CsvWriter {
 
     private static void handleException(Exception e, String message, String filePath) {
         System.err.println(e.getMessage());
-        writeToFile(filePath, message);
+        try {
+            writeToFile(filePath, message);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
